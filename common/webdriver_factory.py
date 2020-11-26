@@ -23,7 +23,7 @@ def create_driver_instance(browser_name: str):
         firefox_driver.maximize_window()
         return firefox_driver
     else:
-        raise ValueError('Invalid browser selected!')
+        raise ValueError(f'Invalid browser selected: {browser_name}!')
 
 
 def __create_chrome_options():
