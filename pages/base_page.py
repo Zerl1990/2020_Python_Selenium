@@ -68,3 +68,12 @@ class BasePage:
         :return: None
         """
         self._wait.until(EC.visibility_of_element_located(self.__BODY_LOCATOR))
+
+    def set_value_attribute(self, element, value):
+        """ Set attribute value
+
+        :param element: Web element to modify
+        :param value: Value to set
+        :return: None
+        """
+        self._driver.execute_script(f"arguments[0].value = '{value}'", element)
