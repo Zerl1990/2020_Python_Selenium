@@ -1,10 +1,10 @@
 """Abstract logic to control practice form"""
-import time
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.remote.webdriver import WebDriver, WebElement
+from selenium.webdriver.remote.webdriver import WebDriver
 from pages.base_page import BasePage
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
+from pages.demoqa.confirmation_form import ConfirmationForm
 
 
 class PracticeForm(BasePage):
@@ -24,10 +24,6 @@ class PracticeForm(BasePage):
 
     __MOBILE_LOC = (By.ID, 'userNumber')
 
-    __DATE_LOC = (By.ID, 'dateOfBirthInput')
-
-    __SUBMIT_LOC = (By.ID, 'submit')
-
     __SUBJECT_INPUT_LOC = (By.ID, 'subjectsInput')
 
     __HOBBIES_XPATH = "//label[contains(@for, 'hobbies') and text()='{0}']"
@@ -39,6 +35,12 @@ class PracticeForm(BasePage):
     __SELECTED_SUBJECT_LOC = (By.XPATH, "//*[contains(@class, 'subjects-auto-complete__multi-value__label')]")
 
     __ADDRESS_LOC = (By.ID, 'currentAddress')
+
+    __STATE_CITY_XPATH = "//*[@id='{0}']//*[contains(@class, '-option') and text()='{1}']"
+
+    __STATE_CITY_VAL_XPATH = "//*[@id='{0}']//*[contains(@class, '-singleValue')]"
+
+    __SUBMIT_LOC = (By.ID, 'submit')
 
     def __init__(self, driver: WebDriver, timeout: int = 20):
         super().__init__(driver, timeout, self.__URL)
@@ -94,6 +96,8 @@ class PracticeForm(BasePage):
     def set_mobile(self, value: str):
         """Set last name"""
         self.__set_input_value(self.__MOBILE_LOC, value)
+
+    __DATE_LOC = (By.ID, 'dateOfBirthInput')
 
     def get_date_of_birth(self):
         """Get date of birth"""
@@ -153,11 +157,45 @@ class PracticeForm(BasePage):
         """Set subject information"""
         self.__set_input_value(self.__ADDRESS_LOC, value)
 
-    def submit(self):
+    def get_state(self) -> str:
+        """Return selected state"""
+        return self.__get_dropdown_value('state')
+
+    def set_state(self, value: str):
+        """Set state dropdown"""
+        self.__select_dropdown('state', value)
+
+    def __get_dropdown_value(self, e_id):
+        value_loc = (By.XPATH, self.__STATE_CITY_VAL_XPATH.format(e_id))
+        item = self._wait.until(EC.visibility_of_element_located(value_loc))
+        return item.text
+
+    def __select_dropdown(self, e_id, value):
+        # 1. Click dropdown div
+        div_loc = (By.ID, e_id)
+        element = self._wait.until(EC.element_to_be_clickable(div_loc))
+        element.click()
+
+        # 2. Wait for item
+        opt_loc = (By.XPATH, self.__STATE_CITY_XPATH.format(e_id, value))
+        item = self._wait.until(EC.element_to_be_clickable(opt_loc))
+
+        # 3. Click item
+        item.click()
+
+    def get_city(self) -> str:
+        """Return selected city"""
+        return self.__get_dropdown_value('city')
+
+    def set_city(self, value: str):
+        """Set state dropdown"""
+        self.__select_dropdown('city', value)
+
+    def submit(self) -> ConfirmationForm:
         """Submit"""
-        tmp_loc = (By.ID, 'submit')
-        element = self._wait.until(EC.element_to_be_clickable(tmp_loc))
+        element = self._wait.until(EC.element_to_be_clickable(self.__SUBMIT_LOC))
         element.submit()
+        return ConfirmationForm(self._driver)
 
     def __get_input_value(self, locator):
         element = self._wait.until(EC.element_to_be_clickable(locator))

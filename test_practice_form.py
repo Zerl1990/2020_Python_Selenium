@@ -26,7 +26,7 @@ try:
     page.set_mobile('0123456789')
     print(f'Mobile: {page.get_mobile()}')
 
-    page.set_date_of_birth('Nov 30 2020')
+    page.set_date_of_birth('Dec 15 2020')
     print(f'Date of Birth: {page.get_date_of_birth()}')
 
     page.set_subject('Maths')
@@ -39,12 +39,24 @@ try:
     print(f'Hobbies: {page.get_hobbies()}')
 
     file_path = os.path.join(ROOT_DIR, '.gitignore')
-    page.set_file(file_path)
+    page.set_file("C:\\Users\\lmrivas\\PycharmProjects\\2020_Python_Selenium\\.gitignore")
     print(f'Selected file: {page.get_file()}')
 
     page.set_current_address('TEST ADDRESS')
     print(f'Address: {page.get_current_address()}')
 
-    page.submit()
+    page.set_state('NCR')
+    print(f'State: {page.get_state()}')
+
+    page.set_city('Delhi')
+    print(f'State: {page.get_city()}')
+
+    confirmation_form = page.submit()
+
+    confirmation_form.wait_until_loaded()
+
+    info = confirmation_form.get_table_info()
+    print(info)
+    confirmation_form.close()
 finally:
     driver.close()

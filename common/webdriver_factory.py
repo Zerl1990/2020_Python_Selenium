@@ -22,6 +22,11 @@ def create_driver_instance(browser_name: str):
         firefox_driver = webdriver.Firefox(executable_path=__FIREFOX_PATH)
         firefox_driver.maximize_window()
         return firefox_driver
+    elif browser_name.lower() == 'chrome-remote':
+        from selenium.webdriver.remote.file_detector import LocalFileDetector
+        driver = webdriver.Remote(command_executor='url')
+        driver.file_detector = LocalFileDetector()
+        raise NotImplemented('Not working...')
     else:
         raise ValueError(f'Invalid browser selected: {browser_name}!')
 
