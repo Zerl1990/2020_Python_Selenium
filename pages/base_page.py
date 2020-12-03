@@ -8,6 +8,8 @@ from selenium.webdriver.common.by import By
 class BasePage:
     """Abstraction for base page."""
 
+    __BODY_LOCATOR = (By.TAG_NAME, 'body')
+
     def __init__(self, driver: WebDriver, timeout: int = 10, url: str = None):
         """Create a new base page instance
 
@@ -19,6 +21,7 @@ class BasePage:
         self._timeout = timeout
         self._url = url
         self._wait = WebDriverWait(driver, timeout)
+        self._window_handler = None
 
     def open(self):
         """Open the web page
@@ -26,6 +29,11 @@ class BasePage:
         :return: None
         """
         self._driver.get(self._url)
+        self._window_handler = self._driver.current_window_handle
+
+    def move_to_main_tab(self):
+        """Move back to main page tab"""
+        self._driver.switch_to.window(self._window_handler)
 
     def close(self):
         """Close the web page
@@ -52,8 +60,6 @@ class BasePage:
             self._wait = WebDriverWait(self._driver, self._timeout)
         else:
             raise ValueError(f'Invalid value for timeout: {timeout}')
-
-    __BODY_LOCATOR = (By.TAG_NAME, 'body')
 
     def refresh(self):
         """Refresh web page
