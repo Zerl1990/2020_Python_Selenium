@@ -16,5 +16,10 @@ try:
 
     page.trips()
     page.move_to_main_tab()
+
+    page.select_tab('flights')
+    page.select_tab('stays')
+    page.stay.wait_until_loaded()
+    page.stay.destination.set_value('Guadalajara')
 finally:
     driver.quit()
