@@ -6,13 +6,14 @@ from pages.demoqa.practice_form import PracticeForm
 
 
 STUDENTS_DATA = [
-    ('Luis', 'Rivas', 'luis@gmail.com'),
-    ('Sofia', 'Valenzuela', 'sofia@gmail.com')
+    ('Luis', 'Rivas', 'luis@gmail.com', 'Male'),
+    ('Sofia', 'Valenzuela', 'sofia@gmail.com', 'Male'),
+    ('Miguel', 'Perez', 'miguel@gmail.com', 'Female')
 ]
 
 
-@pytest.mark.parametrize("first_name, last_name, email", STUDENTS_DATA)
-def test_one(first_name, last_name, email):
+@pytest.mark.parametrize("first_name, last_name, email, gender", STUDENTS_DATA)
+def test_one(first_name, last_name, email, gender):
     """Test form"""
     driver = create_driver_instance('chrome')
     page = PracticeForm(driver, 2)
@@ -21,7 +22,7 @@ def test_one(first_name, last_name, email):
     page.set_first_name(first_name)
     page.set_last_name(last_name)
     page.set_email(email)
-    page.set_gender('Female')
+    page.set_gender(gender)
     page.set_mobile('0123456789')
     page.set_date_of_birth('Dec 15 2020')
     page.set_subject('Maths')
