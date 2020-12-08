@@ -7,7 +7,7 @@ from selenium.webdriver.common.by import By
 
 
 try:
-    driver = create_driver_instance('chrome')
+    driver = create_driver_instance('chrome-remote')
     driver.get('https://demoqa.com/books')
     wait = WebDriverWait(driver, 20)
     elements = wait.until(EC.visibility_of_all_elements_located((By.XPATH, "//*[@class='rt-tr-group']")))

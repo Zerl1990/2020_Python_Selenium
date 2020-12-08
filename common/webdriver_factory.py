@@ -1,6 +1,7 @@
 """Factory to create new instance of web driver."""
 import os
 from selenium import webdriver
+from selenium.webdriver.remote.file_detector import LocalFileDetector
 
 
 __COMMON_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -23,10 +24,10 @@ def create_driver_instance(browser_name: str):
         firefox_driver.maximize_window()
         return firefox_driver
     elif browser_name.lower() == 'chrome-remote':
-        from selenium.webdriver.remote.file_detector import LocalFileDetector
-        driver = webdriver.Remote(command_executor='url')
+        options = webdriver.ChromeOptions()
+        driver = webdriver.Remote('http://127.0.0.1:4444/wd/hub', options.to_capabilities())
         driver.file_detector = LocalFileDetector()
-        raise NotImplemented('Not working...')
+        return driver
     else:
         raise ValueError(f'Invalid browser selected: {browser_name}!')
 
@@ -34,4 +35,7 @@ def create_driver_instance(browser_name: str):
 def __create_chrome_options():
     options = webdriver.ChromeOptions()
     options.add_argument("--start-maximized")
+    options.add_argument("--incognito")
     return options
+
+

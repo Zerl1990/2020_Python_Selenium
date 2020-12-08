@@ -6,14 +6,14 @@ from pages.demoqa.practice_form import PracticeForm
 
 
 STUDENTS_DATA = [
-    ('Luis', 'Rivas', 'luis@gmail.com', 'Male'),
-    ('Sofia', 'Valenzuela', 'sofia@gmail.com', 'Male'),
-    ('Miguel', 'Perez', 'miguel@gmail.com', 'Female')
+    ('Luis', 'Rivas', 'luis@gmail.com', 'Male', ['Maths']),
+    ('Sofia', 'Valenzuela', 'sofia@gmail.com', 'Male', ['Computer Science']),
+    ('Miguel', 'Perez', 'miguel@gmail.com', 'Female', ['Maths', 'Computer Science'])
 ]
 
 
-@pytest.mark.parametrize("first_name, last_name, email, gender", STUDENTS_DATA)
-def test_one(first_name, last_name, email, gender):
+@pytest.mark.parametrize("first_name, last_name, email, gender, subjects", STUDENTS_DATA)
+def test_one(first_name, last_name, email, gender, subjects):
     """Test form"""
     driver = create_driver_instance('chrome')
     page = PracticeForm(driver, 2)
@@ -25,8 +25,8 @@ def test_one(first_name, last_name, email, gender):
     page.set_gender(gender)
     page.set_mobile('0123456789')
     page.set_date_of_birth('Dec 15 2020')
-    page.set_subject('Maths')
-    page.set_subject('Computer Science')
+    for subject in subjects:
+        page.set_subject(subject)
     page.set_hobbies('Sports')
     file_path = os.path.join(ROOT_DIR, '.gitignore')
     page.set_file(file_path)
